@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import SampleSearch from '../SampleSearch';
 import SampleResult from '../SampleResult';
+import Typography from 'material-ui/Typography';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
 
 class Sample extends Component {
 
@@ -10,23 +13,22 @@ class Sample extends Component {
         super(props);
         this.state = {
             sampleBarCode : '',
-            searchResults : []
+            searchResults : [],
+            historyDialogOpen : false,
+            historyResults : [],
         }
         this.onSearchTermChange = this.onSearchTermChange.bind(this);
     }
 
     sampleSearch(sampleBarCode){
-        console.log('sampleBarCode',sampleBarCode);
         axios
-            .get(`http://127.0.0.1:8080/sampleType`)
+            .get(`http://127.0.0.1:8080/sample/${sampleBarCode}`)
             .then(res => {
-                console.log('sampleBarCode res.data.data ',res.data);
                 this.setState({ searchResults: res.data })})
             .catch(err => console.log(err));
     }
 
     onSearchTermChange = (sampleBarCode) => {
-        console.log('sampleBarCode ',sampleBarCode);
         // _.debounce(term => {this.sampleSearch(sampleBarCode)},300);
         this.sampleSearch(sampleBarCode);
 
@@ -35,9 +37,19 @@ class Sample extends Component {
     render(){
         return (
           <div>
-            <h1>EAS</h1>
-            <SampleSearch onSearchTermChange={this.onSearchTermChange}></SampleSearch>
-            <SampleResult searchBarCode={this.state.sampleBarCode} searchResults={this.state.searchResults} ></SampleResult>
+              <AppBar>
+                  <Toolbar>
+                      <Typography variant="headline" component="h2" color="inherit">
+                          EAS
+                      </Typography>
+                      <Typography component="p"  color="inherit">
+                          Solution for Sample Handling
+                      </Typography>
+                  </Toolbar>
+              </AppBar>
+              <br/><br/><br/>
+              <SampleSearch onSearchTermChange={this.onSearchTermChange}></SampleSearch>
+            <SampleResult searchBarCode={this.state.sampleBarCode} searchResults={this.state.searchResults} onHistoryClick={this.onHistoryClick}></SampleResult>
           </div>
         );
     }
