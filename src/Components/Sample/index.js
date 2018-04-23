@@ -6,6 +6,8 @@ import SampleResult from '../SampleResult';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class Sample extends Component {
 
@@ -39,6 +41,9 @@ class Sample extends Component {
           <div>
               <AppBar>
                   <Toolbar>
+                      <IconButton color="inherit" aria-label="Menu">
+                          <MenuIcon />
+                      </IconButton>
                       <Typography variant="headline" component="h2" color="inherit">
                           EAS
                       </Typography>
