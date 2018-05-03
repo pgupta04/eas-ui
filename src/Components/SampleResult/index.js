@@ -38,13 +38,13 @@ export default class SampleResult extends Component {
     }
 
     onIssueAction = (data) => {
-        console.log('Inside onIssueAction');
-        this.setState({ IssueDialogOpen: true });
+        console.log('Inside onIssueAction', data);
+        this.setState({ IssueDialogOpen: true, issueRecord: data });
     }
 
     onTurnInAction = (data) => {
         console.log('Inside onTurnInAction');
-        this.setState({ TurnInDialogOpen: true });
+        this.setState({ TurnInDialogOpen: true, turnInRecord: data });
     }
 
     onIssueActionClose = () => {
@@ -63,7 +63,7 @@ export default class SampleResult extends Component {
     render(){
 
         const data = this.props.searchResults;
-
+        console.log('data', data);
         return (
             <div>
                 <br/>
@@ -89,14 +89,9 @@ export default class SampleResult extends Component {
                         <TableCell numeric>{n.barcode}</TableCell>
                         <TableCell numeric>{n.originalQuantity}</TableCell>
                         <TableCell numeric>{n.remainingQuantity}</TableCell>
-                        <TableCell numeric>
-                            {(() => {
-                                switch (n.status) {
-                                    case "s": return "In Storage";
-                                    case "i": return "Issued";
-                                    case "e": return "Empty";
-                                }
-                            })()}
+                        <TableCell numeric>{n.status === 's' && "In Storage"}
+                                            {n.status === 'i' && "Issued"}
+                                            {n.status === 'e' && "Empty"}
                         </TableCell>
                           <TableCell numeric>{n.storageBin.storageBinName}</TableCell>
                           <TableCell numeric>{n.sampleType.sampleTypeName}</TableCell>
@@ -107,7 +102,7 @@ export default class SampleResult extends Component {
                           <TableCell >
                               {(() => {
                                   switch (n.status) {
-                                      case "s": return (<Button variant="raised" color="primary" onClick={(n)=>this.onIssueAction(n)}>Issue</Button>);
+                                      case "s": return (<Button variant="raised" color="primary" onClick={()=>this.onIssueAction(n)}>Issue</Button>);
                                       case "i": return (<Button variant="raised" color="primary" onClick={(n)=>this.onTurnInAction(n)}>Turn In</Button>);
                                   }
                               })()}
@@ -119,8 +114,8 @@ export default class SampleResult extends Component {
               </Table>
             </Paper>
                 <SampleHistoryDialog dialogOpen={this.state.historyDialogOpen} historyResults={this.state.historyResults} onHistoryOk={this.onHistoryOk}></SampleHistoryDialog>
-                <SampleIssueDialog dialogOpen={this.state.IssueDialogOpen} historyResults={this.state.historyResults} onHistoryOk={this.onIssueActionClose}></SampleIssueDialog>
-                <SampleTurnInDialog dialogOpen={this.state.TurnInDialogOpen} historyResults={this.state.historyResults} onHistoryOk={this.onTurnInActionClose}></SampleTurnInDialog>
+                <SampleIssueDialog dialogOpen={this.state.IssueDialogOpen} historyResults={this.state.historyResults} onHistoryOk={this.onIssueActionClose} issueRecord={this.state.issueRecord}></SampleIssueDialog>
+                <SampleTurnInDialog dialogOpen={this.state.TurnInDialogOpen} historyResults={this.state.historyResults} onHistoryOk={this.onTurnInActionClose} turnInRecord={this.state.turnInRecord}></SampleTurnInDialog>
             </div>
           );
     }

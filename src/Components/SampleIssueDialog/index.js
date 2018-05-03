@@ -9,14 +9,44 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
+import Grid from 'material-ui/Grid';
+import { cloneDeep } from 'lodash';
+import Paper from 'material-ui/Paper';
+
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
 class SampleIssueDialog extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            issueRecord:{
+                barcode:'',
+                originalQuantity:'',
+                remainingQuantity:'',
+                status:'',
+                storageBin: {
+                    storageBinName: '',
+                },
+                sampleType:{
+                    sampleTypeName:'',
+                    handlingTemp:'',
+                    handlingTempUnit:'',
+                },
+            },
+            issueTo: '',
+        }
+        this.handleChange = this.handleChange.bind(this);
+    }
+
     state = {
         open: false,
+    };
+
+    handleChange = event => {
+        this.setState({ issueTo: event.target.value });
     };
 
     handleClickOpen = () => {
@@ -29,8 +59,19 @@ class SampleIssueDialog extends React.Component {
         //this.setState({ open: false });
     };
 
+    componentWillReceiveProps(nextProps){
+        console.log('nextProps', nextProps);
+        console.log('nextProps', nextProps.issueRecord);
+        //if(nextProps.issueRecord != 'undefined')
+        if(nextProps.issueRecord != undefined) {
+            console.log('setting')
+            this.state.issueRecord = nextProps.issueRecord;
+        }
+    }
+
     render() {
-        console.log('Dialog console ', this.state.open);
+        console.log('issueRecord ', this.state.issueRecord);
+        console.log('issueRecord from prop ', this.props.issueRecord);
         this.state.open = this.props.dialogOpen;
 
         return (
@@ -54,12 +95,17 @@ class SampleIssueDialog extends React.Component {
                             </Button>
                         </Toolbar>
                     </AppBar>
-                    <br/><br/>
-                    <FormControl disabled>
-                        <InputLabel htmlFor="name-disabled">Name</InputLabel>
-                        <Input id="name-disabled" value={this.state.name} onChange={this.handleChange} />
-                        <FormHelperText>Disabled</FormHelperText>
-                    </FormControl>
+                    <br/><br/><br/><br/><br/><br/>
+                            <FormControl>
+                                    <InputLabel htmlFor="name-disabled">Sample Code</InputLabel>
+                                    <Input id="name-disabled" value={this.state.issueRecord.barcode} disabled/>
+                                    <InputLabel htmlFor="name-disabled">Origional Quantity</InputLabel>
+                                    <Input id="name-disabled" value={this.state.issueRecord.originalQuantity} disabled/>
+                                    <InputLabel htmlFor="name-disabled">Remaining Quantity</InputLabel>
+                                    <Input id="name-disabled" value={this.state.issueRecord.remainingQuantity} disabled/>
+                                <InputLabel htmlFor="name-helper">Issue To</InputLabel>
+                                <Input id="name-helper" value={this.state.issueTo} onChange={this.handleChange} />
+                            </FormControl>
                 </Dialog>
             </div>
         );

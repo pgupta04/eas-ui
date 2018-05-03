@@ -26,7 +26,6 @@ class SampleHistoryDialogSlide extends React.Component {
     };
 
     render() {
-        console.log('Dialog console ', this.state.open);
         this.state.open = this.props.dialogOpen;
         return (
             <div>
